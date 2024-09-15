@@ -20,7 +20,13 @@ const server = net.createServer((conn)=>{
       let res = Buffer.alloc(20);
       res.writeUInt32BE(correlationId,0);
       res.writeUInt16BE(0,4);
-      res.writeUInt8(messageLength,5);
+      res.writeUInt8(messageLength,6);
+      res.writeUInt16BE(apiKey,7);
+      res.writeUInt16BE(4,9);
+      res.writeUint16BE(4,11);
+      res.writeUInt8(0,13);
+      res.writeUInt32BE(0,14);
+      res.writeUInt8(0,18);
       console.log(res);
       conn.write(res);
     }
