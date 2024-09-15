@@ -8,7 +8,7 @@ const server = net.createServer((conn) => {
 
     let apiVersion = data.subarray(6, 8).readUInt16BE(0);
     let correlationId_Bytes = data.subarray(8, 12);
-
+    console.log("Hi");
     console.log(apiVersion);
     console.log(correlationId_Bytes);
 
