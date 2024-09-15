@@ -12,7 +12,7 @@ const server = net.createServer((connection) => {
 
     let correlationID = data.subarray(4,12);
       connection.write(correlationID);
-      let errorCode = Buffer.alloc(1);
+      let errorCode = Buffer.alloc(2);
       errorCode.writeUInt16BE(0);
       connection.write(errorCode);
   });
