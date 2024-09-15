@@ -25,7 +25,6 @@ const server = net.createServer((connection) => {
     console.log('API Version:', apiVersion);
     console.log('Correlation ID:', correlationID);
 
-    // Prepare response
     let response;
 
     if (apiKey === 18) {
@@ -40,15 +39,16 @@ const server = net.createServer((connection) => {
       }
 
       // Valid request, prepare the successful response
-      response = Buffer.alloc(24); // Correct size based on the response format
-      // Write message length (4 bytes) - total length of the response (20 bytes)
-      response.writeUInt32BE(20, 0); 
+      // Total length: 32 bytes (Adjust based on actual required length)
+      response = Buffer.alloc(32);
+      // Write message length (4 bytes) - total length of the response (28 bytes)
+      response.writeUInt32BE(28, 0);
       // Write Correlation ID (4 bytes)
       response.writeUInt32BE(correlationID, 4);
       // Write Error Code (2 bytes)
       response.writeUInt16BE(0, 8); // No error
-      // Write Length (1 byte) - length of the remaining fields in the response (12 bytes)
-      response.writeUInt8(12, 10); 
+      // Write Length (1 byte) - length of the remaining fields in the response (20 bytes)
+      response.writeUInt8(20, 10);
       // Write API Key (2 bytes)
       response.writeUInt16BE(18, 11);
       // Write Min Version (2 bytes)
