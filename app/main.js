@@ -7,20 +7,14 @@ console.log("Logs from your program will appear here!");
 const server = net.createServer((connection) => {
   
   connection.on("data",(data)=>{
-    let APIVersions = [0,1,2,3,4];
-    let request_api_key = data.subarray(0,2);
-    let request_api_version = data.subarray(2,4);
-    let correlationID = data.subarray(4,12);
 
-    if(APIVersions.includes(request_api_version)){
+    console.log('Received data:', data);
+
+    let correlationID = data.subarray(4,12);
       connection.write(correlationID);
-    }
-    else{
-      connection.write(correlationID);
-      let errorCode = Buffer.alloc(2);
-      errorCode.writeUInt16BE(35);
+      let errorCode = Buffer.alloc(1);
+      errorCode.writeUInt16BE(0);
       connection.write(errorCode);
-    }
   });
 });
 
