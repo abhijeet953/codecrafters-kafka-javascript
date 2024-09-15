@@ -55,7 +55,9 @@ const server = net.createServer((conn) => {
       + fetch_api_key_min_version_bytes.length
       + fetch_api_key_max_version_bytes.length
       + fetch_tag_buffer_bytes.length
-      + throttle_time_ms_bytes.length);
+      + throttle_time_ms_bytes.length
+      + tag_buffer_bytes.length);
+
 
     console.log('Message Length:', msg_length);
 
@@ -83,17 +85,9 @@ const server = net.createServer((conn) => {
     conn.write(fetch_api_key_max_version_bytes);
     conn.write(fetch_tag_buffer_bytes);
     conn.write(throttle_time_ms_bytes);
+    conn.write(tag_buffer_bytes);
 
-    // No need to write tag_buffer_bytes again
-  });
-
-  conn.on('error', (err) => {
-    console.error('Connection error:', err);
   });
 });
 
-server.listen(9092, "127.0.0.1");
-
-server.on('error', (err) => {
-  console.error('Server error:', err);
-});
+server.listen(9092, "127.0.0.1")
