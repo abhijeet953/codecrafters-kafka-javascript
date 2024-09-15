@@ -17,8 +17,9 @@ const server = net.createServer((connection) => {
     }
     else{
       connection.write(correlationID);
-      // const errorStringResponse = "35";
-      connection.write("35");
+      let errorCode = Buffer.alloc(2);
+      errorCode.writeUInt16BE(35);
+      connection.write(errorCode);
     }
   });
 });
