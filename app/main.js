@@ -10,9 +10,8 @@ const server = net.createServer((conn)=>{
     let apiKey = data.subarray(4,6).readUInt16BE();
     let apiVersion = data.subarray(6,8).readUInt16BE();
     let correlationId = data.subarray(8,12).readUInt32BE();
-    let ll = Buffer.alloc(1);
-    ll.writeUInt8BE(messageLength);
-    console.log("Message Length :",ll);
+    
+    console.log("Message Length :",messageLength);
     console.log("apiKey :",apiKey);
     console.log("apiVersion :",apiVersion);
     console.group("Correlation ID :",correlationId)
@@ -21,7 +20,7 @@ const server = net.createServer((conn)=>{
       let res = Buffer.alloc(20);
       res.writeUInt32BE(correlationId,0);
       res.writeUInt16BE(0,4);
-      res.writeUInt8BE(ll,5);
+      res.writeUInt8BE(messageLength,5);
     }
 
   });
