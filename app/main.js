@@ -11,22 +11,22 @@ const server = net.createServer((connection) => {
 
     console.log('Received data:', data);
 
-    let messageLength = Buffer.alloc(4);
-    messageLength.writeUInt32BE(data.subarray(0,4).length);
-    let request_api_key = data.subarray(4,6);
-    let request_api_version = data.subarray(6,8);
-    
-    //Message Length
-    connection.write(messageLength);
-    // //Correlation ID
-    connection.write(data.subarray(8,24));
-    // //No error
-    // let errorCode = Buffer.alloc(1);
-    // errorCode.writeUInt8(0);
-    // connection.write(errorCode);
-    // //response body contains at least one entry for API Key 18
-    // connection.write(request_api_version);
-    // //Max version for the API key 18 is 4
+    const messageLength = Buffer.alloc(4);
+    messageLength.writeUInt32BE(data.length - 4); // Actual length minus the size of the length field
+
+    // Extract and handle correlation ID
+    const correlationId = data.subarray(8, 12);
+
+    // Prepare response
+    let response = Buffer.concat([
+      messageLength,
+      correlationId,
+      Buffer.from([0, 0]),  // No error
+      Buffer.from([18, 4])   // ApiKey 18 and MaxVersion 4
+    ]);
+
+    // Send response
+    connection.write(response);
 
 
   });
