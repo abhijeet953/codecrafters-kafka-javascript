@@ -47,7 +47,7 @@ const server = net.createServer((conn) => {
     mlb.writeUInt32BE(msg_length, 0);
 
     conn.write(mlb);
-    conn.write(correlationId_Bytes);
+    conn.write(correlationId_bytes);
     if (apiVersion >= 0 && apiVersion <= 4) {
       console.log("INSIDE");
       conn.write(error_code_bytes);
