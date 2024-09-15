@@ -32,7 +32,7 @@ const server = net.createServer((conn) => {
     const throttle_time_ms_bytes = Buffer.alloc(4);
     throttle_time_ms_bytes.writeInt32BE(0, 0);
 
-    let msg_length = (correlationId_Bytes.length
+    let msg_length = (correlationId_bytes.length
       + error_code_bytes.length
       + api_key_bytes.length
       + response_api_key_bytes.length
