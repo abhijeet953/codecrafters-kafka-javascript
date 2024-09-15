@@ -23,44 +23,25 @@ const server = net.createServer((connection) => {
           connection.write(errorCode);
         }
         const res = Buffer.alloc(32); // Allocate a buffer of the required size
-
         // Write Correlation ID (4 bytes)
-        console.log(res);
         res.writeUInt32BE(correlationID, 0);
-
         // Write Error Code (2 bytes)
-        console.log(res);
         res.writeUInt16BE(0, 4);
-
-        // Write Length (1 byte) – Length of the rest of the response body
-        console.log(res);
+        // Write Length (1 byte) – Length of the rest of the response bod
         res.writeUInt8(8, 6); // Corrected length to 8 based on the BufferWriter example
-        console.log(res);
-
         // Write API Key (2 bytes)
-        console.log(res);
         res.writeUInt16BE(18, 7);
-
         // Write Min Version (2 bytes)
-        console.log(res);
         res.writeUInt16BE(4, 9);
-
         // Write Max Version (2 bytes)
-        console.log(res);
         res.writeUInt16BE(4, 11);
-
-        // Write _tagged_fields[0] Length (1 byte)
-        console.log(res);
+        // Write _tagged_fields[0] Length (1 byte
         res.writeUInt8(0, 13); // Length of tagged fields
-        console.log(res);
-
         // Write Throttle Time (4 bytes)
-        console.log(res);
         res.writeUInt32BE(0, 14);
-
         // Write _tagged_fields Length (1 byte)
-        console.log(res);
         res.writeUInt8(0, 18); // Length of additional tagged fields
+        console.log(res);
         connection.write(res);
       default:
         connection.write(correlationIDString);
