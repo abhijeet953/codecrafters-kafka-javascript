@@ -18,6 +18,9 @@ const server = net.createServer((connection) => {
     console.log('Request API Key:', request_api_key);
     console.log('Received API Version:', request_api_version);
     
+    //Correlation ID 4 bytes
+    connection.write(data.subarray(8,24))
+
     let errorCode = Buffer.alloc(1);
     errorCode.writeUInt8(0);
     connection.write(errorCode);
