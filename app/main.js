@@ -22,19 +22,7 @@ const server = net.createServer((connection) => {
           errorCode.writeUInt16BE(35);
           connection.write(errorCode);
         }
-        const res = new BufferWriter();
-            res.withLengthPrefix(res => {
-                res.writeInt32(correlationIdString)
-                res.writeInt16(0) // Error code
-                res.writeUInt8(2) // length + 1
-                res.writeInt16(18) // api_key[0]
-                res.writeInt16(4) // min_version[0]
-                res.writeInt16(4) // max_version[0]
-                res.writeUInt8(0) // _tagged_fields[0] length
-                res.writeInt32(0) // throttle_time_ms
-                res.writeUInt8(0) // _tagged_fields length
-            })
-        connection.write(res);
+        
       default:
         connection.write(correlationIDString);
         let errorCode = Buffer.alloc(2);
