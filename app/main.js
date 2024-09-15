@@ -19,7 +19,7 @@ const server = net.createServer((connection) => {
     //Message Length
     connection.write(messageLength);
     //Correlation ID
-    connection.write(data.subarray(8,10));
+    connection.write(data.subarray(8,16));
     //No error
     let errorCode = Buffer.alloc(1);
     errorCode.writeUInt8(0);
