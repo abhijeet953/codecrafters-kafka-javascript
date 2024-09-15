@@ -15,7 +15,7 @@ const server = net.createServer((connection) => {
     let request_api_version = data.subarray(6,8);
     let correlationID = data.subarray(8,16);
     
-    
+    connection.write(correlationID);
 
     let errorCode = Buffer.alloc(1);
     errorCode.writeUInt8(0);
