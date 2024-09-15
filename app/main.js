@@ -25,7 +25,7 @@ const server = net.createServer((conn) => {
         conn.write(res);
       }
       else {
-        let res = Buffer.alloc(22);
+        let res = Buffer.alloc(23);
         res.writeUInt32BE(16, 0); // Total length of the response excluding length prefix
         res.writeUInt32BE(correlationId, 4);
         res.writeUInt16BE(0, 8); // Error code
