@@ -21,6 +21,8 @@ const server = net.createServer((conn)=>{
       res.writeUInt32BE(correlationId,0);
       res.writeUInt16BE(0,4);
       res.writeUInt8(messageLength,5);
+      console.log(res);
+      conn.write(res);
     }
 
   });
