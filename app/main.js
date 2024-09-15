@@ -1,55 +1,73 @@
-import net from "net";
+import net from 'net';
 
-const API_VERSIONS_KEY = 18;
-const MAX_VERSION = 4;
-// You can use print statements as follows for debugging, they'll be visible when running tests.
-console.log("Logs from your program will appear here!");
-
-// Uncomment this block to pass the first stage
 const server = net.createServer((connection) => {
+  connection.on('data', (data) => {
+    console.log('Received data:', data);
 
-  connection.on("data", (data) => {
+    // Ensure data has enough length to read
+    if (data.length < 8) { // Adjust if the length of the message is different
+      console.error('Received data is too short.');
+      return;
+    }
 
-    let messageLength = data.readUInt32BE(0);
+    // Read message length (4 bytes)
+    const messageLength = data.readUInt32BE(0);
     console.log('Message Length:', messageLength);
 
-    // Extract API key and version (next 4 bytes total)
-    let request_api_key = data.readUInt16BE(4);
-    let request_api_version = data.readUInt16BE(6);
+    // Read API Key (2 bytes)
+    const requestApiKey = data.readUInt16BE(4);
+    console.log('Request API Key:', requestApiKey);
 
-    console.log('API Key:', request_api_key);
-    console.log('API Version:', request_api_version);
-
-    // Extract correlation ID (next 4 bytes starting from 8th byte)
-    let correlationId = data.readUInt32BE(8);
-    console.log('Correlation ID:', correlationId);
+    // Read API Version (2 bytes)
+    const requestApiVersion = data.readUInt16BE(6);
+    console.log('Request API Version:', requestApiVersion);
 
     // Prepare response
-    let response = Buffer.alloc(12);  // Message length (4 bytes) + Correlation ID (4 bytes) + Error Code (1 byte) + Entry (1 byte)
+    let response;
 
-    // Write message length (4 bytes)
-    response.writeUInt32BE(8, 0);  // Header is 8 bytes long
+    if (requestApiKey === 18 && requestApiVersion >= 0 && requestApiVersion <= 4) {
+      // Create response buffer
+      response = Buffer.alloc(16); // Adjust size as needed
 
-    // Write correlation ID (4 bytes)
-    response.writeUInt32BE(correlationId, 4);
+      // Write message length (4 bytes)
+      response.writeUInt32BE(12, 0); // Adjust length as needed
 
-    // Write no error (1 byte)
-    response.writeUInt8(0, 8);
+      // Write correlation ID (4 bytes) - Placeholder
+      response.writeUInt32BE(0, 4); // Placeholder for correlation ID
 
-    // Check if the API key is API_VERSIONS (18) and version is >= 4
-    if (request_api_key === API_VERSIONS_KEY && request_api_version >= MAX_VERSION) {
-      // Write the MaxVersion for API_VERSIONS (1 byte, assuming 4 is the max)
-      response.writeUInt8(MAX_VERSION, 9);
+      // Write error code (1 byte)
+      response.writeUInt8(0, 8);
+
+      // Write length (1 byte)
+      response.writeUInt8(8, 9);
+
+      // Write API key (2 bytes)
+      response.writeUInt16BE(18, 10);
+
+      // Write min version (2 bytes)
+      response.writeUInt16BE(0, 12);
+
+      // Write max version (2 bytes)
+      response.writeUInt16BE(4, 14);
     } else {
-      // If the request doesn't meet the API version requirement, set an error or handle it differently
-      response.writeUInt8(0, 9);  // For simplicity, respond with 0
+      // Handle other cases or errors
+      response = Buffer.alloc(8);
+
+      // Write message length (4 bytes)
+      response.writeUInt32BE(4, 0);
+
+      // Write correlation ID (4 bytes) - Placeholder
+      response.writeUInt32BE(0, 4);
+
+      // Write error code (1 byte)
+      response.writeUInt8(1, 8); // Error code for unsupported API Key or version
     }
 
     // Send the response
     connection.write(response);
-
-
   });
 });
 
-server.listen(9092, "127.0.0.1");
+server.listen(9092, '127.0.0.1', () => {
+  console.log('Server is listening on port 9092');
+});
