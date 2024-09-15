@@ -50,7 +50,7 @@ const server = net.createServer((conn) => {
     console.log('Tag Buffer Bytes:', tag_buffer_bytes);
     console.log('Throttle Time MS Bytes:', throttle_time_ms_bytes);
 
-    const msg_length = (correlationId_Bytes.length 
+    let msg_length = (correlationId_Bytes.length 
       + error_code_bytes.length
       + api_key_bytes.length
       + response_api_key_bytes.length
@@ -59,7 +59,7 @@ const server = net.createServer((conn) => {
       + tag_buffer_bytes.length
       + throttle_time_ms_bytes.length);
 
-      console.log('Message Length:', msg_len);
+      console.log('Message Length:', msg_length);
 
 
   });
