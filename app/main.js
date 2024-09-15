@@ -9,9 +9,11 @@ const server = net.createServer((conn)=>{
     let messageLength = data.subarray(0,4).readUInt32BE();
     let apiKey = data.subarray(4,6).readUInt16BE();
     let apiVersion = data.subarray(6,8).readUInt16BE();
+    let correlationId = data.subarray(8,12).readUInt32BE();
     console.log("Message Length :",messageLength);
     console.log("apiKey :",apiKey);
     console.log("apiVersion :",apiVersion);
+    console.group("Correlation ID :",correlationId)
 
   });
 });
