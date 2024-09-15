@@ -13,9 +13,11 @@ const server = net.createServer((connection) => {
     let messageLength = data.subarray(0,4);
     let request_api_key = data.subarray(4,6);
     let request_api_version = data.subarray(6,8);
-    let correlationID = data.subarray(8,16);
     
-    connection.write(correlationID);
+    // let correlationID = Buffer.alloc(data.subarray(8,12));
+
+    connection.write(data.subarray(8,12));
+    
 
     let errorCode = Buffer.alloc(1);
     errorCode.writeUInt8(0);
