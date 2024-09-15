@@ -26,7 +26,7 @@ const server = net.createServer((connection) => {
       default:
         connection.write(correlationIDString);
         let errorCode = Buffer.alloc(2);
-        errorCode.writeUInt16BE(-1);
+        errorCode.writeUInt16BE(0);
         connection.write(errorCode);
     }
 
