@@ -5,14 +5,20 @@ const server = net.createServer((connection) => {
     console.log('Received data:', data);
 
     // Ensure data has enough length to read
-    if (data.length < 8) { // Adjust if the length of the message is different
-      console.error('Received data is too short.');
+    if (data.length < 8) {
+      console.error('Received data is too short:', data.length);
       return;
     }
 
     // Read message length (4 bytes)
     const messageLength = data.readUInt32BE(0);
     console.log('Message Length:', messageLength);
+
+    // Ensure that the total length of received data is as expected
+    if (data.length < messageLength + 4) {
+      console.error('Unexpected end of data. Expected length:', messageLength + 4, 'but received:', data.length);
+      return;
+    }
 
     // Read API Key (2 bytes)
     const requestApiKey = data.readUInt16BE(4);
@@ -27,10 +33,10 @@ const server = net.createServer((connection) => {
 
     if (requestApiKey === 18 && requestApiVersion >= 0 && requestApiVersion <= 4) {
       // Create response buffer
-      response = Buffer.alloc(16); // Adjust size as needed
+      response = Buffer.alloc(16); // Adjust size based on protocol requirements
 
       // Write message length (4 bytes)
-      response.writeUInt32BE(12, 0); // Adjust length as needed
+      response.writeUInt32BE(12, 0); // Length of the response body
 
       // Write correlation ID (4 bytes) - Placeholder
       response.writeUInt32BE(0, 4); // Placeholder for correlation ID
