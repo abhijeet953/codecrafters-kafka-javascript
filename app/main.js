@@ -18,15 +18,15 @@ const server = net.createServer((connection) => {
     
     //Message Length
     connection.write(messageLength);
-    //Correlation ID
-    connection.write(data.subarray(8,16));
-    //No error
-    let errorCode = Buffer.alloc(1);
-    errorCode.writeUInt8(0);
-    connection.write(errorCode);
-    //response body contains at least one entry for API Key 18
-    connection.write(request_api_version);
-    //Max version for the API key 18 is 4
+    // //Correlation ID
+    // connection.write(data.subarray(8,16));
+    // //No error
+    // let errorCode = Buffer.alloc(1);
+    // errorCode.writeUInt8(0);
+    // connection.write(errorCode);
+    // //response body contains at least one entry for API Key 18
+    // connection.write(request_api_version);
+    // //Max version for the API key 18 is 4
 
 
   });
