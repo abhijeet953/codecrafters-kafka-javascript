@@ -23,15 +23,15 @@ const server = net.createServer((connection) => {
           connection.write(errorCode);
         }
         const res = Buffer.alloc(32);
-                res.writeUInt32(correlationID,0)
-                res.writeUInt16(0,4) // Error code
-                res.writeUInt8(2,6) // length + 1
-                res.writeUInt16(18,7) // api_key[0]
-                res.writeUInt16(4,9) // min_version[0]
-                res.writeUInt16(4,11) // max_version[0]
-                res.writeUInt8(0,13) // _tagged_fields[0] length
-                res.writeUInt32(0,17) // throttle_time_ms
-                res.writeUInt8(0,18) // _tagged_fields length
+                res.writeUInt32BE(correlationID,0)
+                res.writeUInt16BE(0,4) // Error code
+                res.writeUInt8BE(2,6) // length + 1
+                res.writeUInt16BE(18,7) // api_key[0]
+                res.writeUInt16BE(4,9) // min_version[0]
+                res.writeUInt16BE(4,11) // max_version[0]
+                res.writeUInt8BE(0,13) // _tagged_fields[0] length
+                res.writeUInt32BE(0,17) // throttle_time_ms
+                res.writeUInt8BE(0,18) // _tagged_fields length
         connection.write(res);
       default:
         connection.write(correlationIDString);
