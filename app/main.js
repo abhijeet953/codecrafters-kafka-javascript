@@ -6,39 +6,11 @@ const server = net.createServer((conn) => {
 
     console.log(data);
 
-    let messageLength = data.subarray(0, 4).readUInt32BE();
-    let apiKey = data.subarray(4, 6).readUInt16BE();
-    let apiVersion = data.subarray(6, 8).readUInt16BE();
-    let correlationId = data.subarray(8, 12).readUInt32BE();
+    let api_version_bytes = data.subarray(6,8);
+    let correlation_bytes = data.subarray(8,12);
 
-    console.log("Message Length :", messageLength);
-    console.log("apiKey :", apiKey);
-    console.log("apiVersion :", apiVersion);
-    console.group("Correlation ID :", correlationId)
-
-    if (apiKey == 18) {
-      if (apiVersion < 0 || apiVersion > 4) {
-        let res = Buffer.alloc(5);
-        res.writeInt32BE(correlationId, 0);
-        res.writeUInt8(0, 5);
-        console.log("APIVERSION IS OUTSIDE THE BOUNDS");
-        conn.write(res);
-      }
-      else {
-        let res = Buffer.alloc(20);
-        res.writeUInt32BE(correlationId, 0);
-        res.writeUInt16BE(0, 4);
-        res.writeUInt8(messageLength - 8, 6);
-        res.writeUInt16BE(apiKey, 7);
-        res.writeUInt16BE(4, 9);
-        res.writeUint16BE(4, 11);
-        res.writeUInt8(0, 13);
-        res.writeUInt32BE(0, 14);
-        res.writeUInt8(0, 18);
-        console.log(res);
-        conn.write(res);
-      }
-    }
+    console.log(api_version_bytes);
+    console.log(correlation_bytes);
 
   });
 });
