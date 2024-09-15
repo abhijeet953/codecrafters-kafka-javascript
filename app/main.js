@@ -25,10 +25,10 @@ const server = net.createServer((conn) => {
         conn.write(res);
       }
       else {
-        let res = Buffer.alloc(20);
+        let res = Buffer.alloc(35);
         res.writeUInt32BE(correlationId, 0);
         res.writeUInt16BE(0, 4);
-        res.writeUInt8(messageLength, 6);
+        res.writeUInt8(messageLength - 8, 6);
         res.writeUInt16BE(apiKey, 7);
         res.writeUInt16BE(4, 9);
         res.writeUint16BE(4, 11);
