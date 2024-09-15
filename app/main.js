@@ -4,7 +4,7 @@ const server = net.createServer((connection) => {
   connection.on('data', (data) => {
     console.log('Received data:', data);
 
-    // Ensure data has enough length to read
+    // Ensure data has enough length to read all required fields
     if (data.length < 12) { // Minimum length to read all required fields
       console.error('Received data is too short.');
       return;
@@ -40,15 +40,15 @@ const server = net.createServer((connection) => {
       }
 
       // Valid request, prepare the successful response
-      response = Buffer.alloc(32);
-      // Write message length (4 bytes) - length of the rest of the response (28 bytes)
-      response.writeUInt32BE(28, 0);
+      response = Buffer.alloc(24); // Correct size based on the response format
+      // Write message length (4 bytes) - total length of the response (20 bytes)
+      response.writeUInt32BE(20, 0); 
       // Write Correlation ID (4 bytes)
       response.writeUInt32BE(correlationID, 4);
       // Write Error Code (2 bytes)
       response.writeUInt16BE(0, 8); // No error
-      // Write Length (1 byte) - length of the remaining fields in the response (24 bytes)
-      response.writeUInt8(24, 10);
+      // Write Length (1 byte) - length of the remaining fields in the response (12 bytes)
+      response.writeUInt8(12, 10); 
       // Write API Key (2 bytes)
       response.writeUInt16BE(18, 11);
       // Write Min Version (2 bytes)
@@ -58,7 +58,7 @@ const server = net.createServer((connection) => {
       // Write _tagged_fields[0] Length (1 byte)
       response.writeUInt8(0, 17); // No tagged fields
       // Write Throttle Time (4 bytes)
-      response.writeUInt32BE(0, 18);
+      response.writeUInt32BE(0, 18); 
       // Write _tagged_fields Length (1 byte)
       response.writeUInt8(0, 22); // No additional tagged fields
     } else {
