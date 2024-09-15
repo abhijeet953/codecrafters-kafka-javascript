@@ -26,20 +26,43 @@ const server = net.createServer((conn) => {
     const api_key_max_version_bytes = Buffer.alloc(2);
     api_key_max_version_bytes.writeInt16BE(4, 0);
 
-    const tag_buffer_bytes = Buffer.alloc(2);
-    tag_buffer_bytes.writeInt16BE(0, 0);
+    let tag_buffer_bytes = Buffer.alloc(1);
+    tag_buffer_bytes.writeInt8(0);
 
     const throttle_time_ms_bytes = Buffer.alloc(4);
     throttle_time_ms_bytes.writeInt32BE(0, 0);
 
+    let num_api_keys_bytes = Buffer.alloc(1);
+    num_api_keys_bytes.writeInt8(3);
+
+    let fetch_response_api_key_bytes = Buffer.alloc(2);
+    fetch_response_api_key_bytes.writeInt16BE(1);
+
+    let fetch_api_key_min_version_bytes = Buffer.alloc(2);
+    fetch_api_key_min_version_bytes.writeInt16BE(4);
+
+    let fetch_api_key_max_version_bytes = Buffer.alloc(2);
+    fetch_api_key_max_version_bytes.writeInt16BE(16);
+
+    let fetch_tag_buffer_bytes = Buffer.alloc(1);
+    fetch_tag_buffer_bytes.writeInt8(0);
+
     let msg_length = (correlationId_bytes.length
       + error_code_bytes.length
-      + api_key_bytes.length
+      + num_api_keys_bytes.length
       + response_api_key_bytes.length
       + api_key_min_version_bytes.length
       + api_key_max_version_bytes.length
       + tag_buffer_bytes.length
-      + throttle_time_ms_bytes.length);
+      + throttle_time_ms_bytes.length
+      + fetch_response_api_key_bytes.length
+      + fetch_api_key_min_version_bytes
+      + fetch_api_key_max_version_bytes
+      + fetch_tag_buffer_bytes
+      + tag_buffer_bytes);
+
+
+
 
     console.log('Message Length:', msg_length);
 
@@ -57,12 +80,17 @@ const server = net.createServer((conn) => {
       conn.write(errorCode);
     }
 
-    conn.write(api_key_bytes);
+    conn.write(num_api_keys_bytes);
     conn.write(response_api_key_bytes);
     conn.write(api_key_min_version_bytes);
     conn.write(api_key_max_version_bytes);
     conn.write(tag_buffer_bytes);
+    conn.write(fetch_response_api_key_bytes);
+    conn.write(fetch_api_key_min_version_bytes);
+    conn.write(fetch_api_key_max_version_bytes);
+    conn.write(fetch_tag_buffer_bytes);
     conn.write(throttle_time_ms_bytes);
+    conn.write(tag_buffer_bytes);
 
   });
 });
