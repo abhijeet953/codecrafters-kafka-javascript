@@ -4,9 +4,9 @@ const server = net.createServer((connection) => {
   connection.on('data', (data) => {
     console.log('Received data:', data);
 
-    // Ensure data has enough length to read
-    if (data.length < 8) {
-      console.error('Received data is too short:', data.length);
+    // Ensure data has enough length to read the message length
+    if (data.length < 4) {
+      console.error('Received data is too short to read the message length.');
       return;
     }
 
@@ -14,7 +14,7 @@ const server = net.createServer((connection) => {
     const messageLength = data.readUInt32BE(0);
     console.log('Message Length:', messageLength);
 
-    // Ensure that the total length of received data is as expected
+    // Check if the total length of received data is sufficient
     if (data.length < messageLength + 4) {
       console.error('Unexpected end of data. Expected length:', messageLength + 4, 'but received:', data.length);
       return;
@@ -33,10 +33,10 @@ const server = net.createServer((connection) => {
 
     if (requestApiKey === 18 && requestApiVersion >= 0 && requestApiVersion <= 4) {
       // Create response buffer
-      response = Buffer.alloc(16); // Adjust size based on protocol requirements
+      response = Buffer.alloc(35); // Adjust size based on protocol requirements
 
       // Write message length (4 bytes)
-      response.writeUInt32BE(12, 0); // Length of the response body
+      response.writeUInt32BE(31, 0); // Length of the response body
 
       // Write correlation ID (4 bytes) - Placeholder
       response.writeUInt32BE(0, 4); // Placeholder for correlation ID
@@ -44,7 +44,7 @@ const server = net.createServer((connection) => {
       // Write error code (1 byte)
       response.writeUInt8(0, 8);
 
-      // Write length (1 byte)
+      // Write length (1 byte) - assuming this is the length of the following data
       response.writeUInt8(8, 9);
 
       // Write API key (2 bytes)
@@ -55,6 +55,11 @@ const server = net.createServer((connection) => {
 
       // Write max version (2 bytes)
       response.writeUInt16BE(4, 14);
+
+      // Write additional fields as needed (e.g., tagged fields)
+      // Adjust these fields according to your protocol
+      response.writeUInt8(0, 16); // Placeholder for additional data (if required)
+      
     } else {
       // Handle other cases or errors
       response = Buffer.alloc(8);
@@ -71,6 +76,10 @@ const server = net.createServer((connection) => {
 
     // Send the response
     connection.write(response);
+  });
+
+  connection.on('error', (err) => {
+    console.error('Connection error:', err);
   });
 });
 
