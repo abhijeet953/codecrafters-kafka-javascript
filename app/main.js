@@ -7,10 +7,10 @@ const server = net.createServer((conn) => {
     console.log(data);
 
     let apiVersion = data.subarray(6, 8).readUInt16BE(0);
-    let correlationId = data.subarray(8, 12).readUInt32BE(0);
+    let correlationId_Bytes = data.subarray(8, 12);
 
     console.log(apiVersion);
-    console.log(correlationId);
+    console.log(correlationId_Bytes);
 
     // Create Buffers with similar properties as the Python examples
 
@@ -50,7 +50,16 @@ const server = net.createServer((conn) => {
     console.log('Tag Buffer Bytes:', tag_buffer_bytes);
     console.log('Throttle Time MS Bytes:', throttle_time_ms_bytes);
 
+    const msg_length = (correlationId_Bytes.length 
+      + error_code_bytes.length
+      + api_key_bytes.length
+      + response_api_key_bytes.length
+      + api_key_min_version_bytes.length
+      + api_key_max_version_bytes.length
+      + tag_buffer_bytes.length
+      + throttle_time_ms_bytes.length);
 
+      console.log('Message Length:', msg_len);
 
 
   });
