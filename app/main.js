@@ -23,7 +23,7 @@ const server = net.createServer((connection) => {
           connection.write(errorCode);
         }
         const res = Buffer.alloc(32);
-        res.writeInt32(correlationID,0)
+                res.writeUInt32(correlationID,0)
                 res.writeUInt16(0,4) // Error code
                 res.writeUInt8(2,6) // length + 1
                 res.writeUInt16(18,7) // api_key[0]
