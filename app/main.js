@@ -11,11 +11,12 @@ const server = net.createServer((connection) => {
 
     console.log('Received data:', data);
 
-    let messageLength = data.subarray(0,4);
+    let messageLength = Buffer.alloc(4);
+    messageLength.writeUInt32BE(data.subarray(0,4).length);
     let request_api_key = data.subarray(4,6);
     let request_api_version = data.subarray(6,8);
     
-    connection.write(messageLength.length);
+    connection.write(messageLength);
     connection.write(data.subarray(8,12));
 
     let errorCode = Buffer.alloc(1);
