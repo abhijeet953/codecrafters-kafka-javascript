@@ -17,7 +17,8 @@ const server = net.createServer((connection) => {
     }
     else{
       connection.write(correlationID);
-      connection.write(35);
+      // const errorStringResponse = "35";
+      connection.write("35");
     }
   });
 });
