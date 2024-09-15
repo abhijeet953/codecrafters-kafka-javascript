@@ -22,17 +22,35 @@ const server = net.createServer((connection) => {
           errorCode.writeUInt16BE(35);
           connection.write(errorCode);
         }
-        const res = Buffer.alloc(32);
-                res.writeUInt32BE(correlationID,0)
-                res.writeUInt16BE(0,4) // Error code
-                res.writeUInt8BE(2,6) // length + 1
-                res.writeUInt16BE(18,7) // api_key[0]
-                res.writeUInt16BE(4,9) // min_version[0]
-                res.writeUInt16BE(4,11) // max_version[0]
-                res.writeUInt8BE(0,13) // _tagged_fields[0] length
-                res.writeUInt32BE(0,17) // throttle_time_ms
-                res.writeUInt8BE(0,18) // _tagged_fields length
-        connection.write(res);
+        const res = Buffer.alloc(32); // Allocate a buffer of the required size
+
+// Write Correlation ID (4 bytes)
+res.writeUInt32BE(correlationID, 0);
+
+// Write Error Code (2 bytes)
+res.writeUInt16BE(0, 4);
+
+// Write Length (1 byte) – Length of the rest of the response body
+res.writeUInt8(8, 6); // Corrected length to 8 based on the BufferWriter example
+
+// Write API Key (2 bytes)
+res.writeUInt16BE(18, 7);
+
+// Write Min Version (2 bytes)
+res.writeUInt16BE(4, 9);
+
+// Write Max Version (2 bytes)
+res.writeUInt16BE(4, 11);
+
+// Write _tagged_fields[0] Length (1 byte)
+res.writeUInt8(0, 13); // Length of tagged fields
+
+// Write Throttle Time (4 bytes)
+res.writeUInt32BE(0, 14);
+
+// Write _tagged_fields Length (1 byte)
+res.writeUInt8(0, 18); // Length of additional tagged fields
+connection.write(res);
       default:
         connection.write(correlationIDString);
         let errorCode = Buffer.alloc(2);
