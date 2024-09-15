@@ -17,26 +17,28 @@ const server = net.createServer((conn) => {
     console.group("Correlation ID :", correlationId)
 
     if (apiKey == 18) {
-      if (apiVersion < 0 || apiVersion > 4){
+      if (apiVersion < 0 || apiVersion > 4) {
         let res = Buffer.alloc(5);
-        res.writeInt32BE(correlationId,0);
-        res.writeUInt8(0,5);
+        res.writeInt32BE(correlationId, 0);
+        res.writeUInt8(0, 5);
         console.log("APIVERSION IS OUTSIDE THE BOUNDS");
         conn.write(res);
       }
-
-      let res = Buffer.alloc(20);
-      res.writeUInt32BE(correlationId, 0);
-      res.writeUInt16BE(0, 4);
-      res.writeUInt8(messageLength, 6);
-      res.writeUInt16BE(apiKey, 7);
-      res.writeUInt16BE(4, 9);
-      res.writeUint16BE(4, 11);
-      res.writeUInt8(0, 13);
-      res.writeUInt32BE(0, 14);
-      res.writeUInt8(0, 18);
-      console.log(res);
-      conn.write(res);
+      else {
+        let res = Buffer.alloc(22);
+        res.writeUInt32BE(16, 0); // Total length of the response excluding length prefix
+        res.writeUInt32BE(correlationId, 4);
+        res.writeUInt16BE(0, 8); // Error code
+        res.writeUInt8(8, 10); // Length of the following fields + 1
+        res.writeUInt16BE(apiKey, 11);
+        res.writeUInt16BE(4, 13); // Min version
+        res.writeUInt16BE(4, 15); // Max version
+        res.writeUInt8(0, 17); // _tagged_fields[0] length
+        res.writeUInt32BE(0, 18); // Throttle time
+        res.writeUInt8(0, 22); // _tagged_fields length
+        console.log(res);
+        conn.write(res);
+      }
     }
 
   });
