@@ -78,7 +78,7 @@ const server = net.createServer((conn) => {
     conn.write(response_api_key_bytes);
     conn.write(api_key_min_version_bytes);
     conn.write(api_key_max_version_bytes);
-    conn.write(tag_buffer_bytes);
+    // conn.write(tag_buffer_bytes);
     conn.write(fetch_response_api_key_bytes);
     conn.write(fetch_api_key_min_version_bytes);
     conn.write(fetch_api_key_max_version_bytes);
