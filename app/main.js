@@ -6,6 +6,13 @@ const server = net.createServer((conn)=>{
 
     console.log(data);
 
+    let messageLength = data.subarray(0,4).readUInt32BE();
+    let apiKey = data.subarray(4,6).readUInt16BE();
+    let apiVersion = data.subarray(6,8).readUInt16BE();
+    console.log("Message Length :",messageLength);
+    console.log("apiKey :",apiKey);
+    console.log("apiVersion :",apiVersion);
+
   });
 });
 
