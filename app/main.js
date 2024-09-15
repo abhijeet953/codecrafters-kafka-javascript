@@ -44,6 +44,9 @@ const server = net.createServer((conn) => {
     let fetch_tag_buffer_bytes = Buffer.alloc(1);
     fetch_tag_buffer_bytes.writeInt8(0);
 
+    const session_id_bytes = Buffer.alloc(4);
+    session_id_bytes.writeUInt32BE(0,0);
+
     let msg_length = (correlationId_bytes.length
       + error_code_bytes.length
       + num_api_keys_bytes.length
@@ -56,7 +59,8 @@ const server = net.createServer((conn) => {
       + fetch_api_key_max_version_bytes.length
       + fetch_tag_buffer_bytes.length
       + throttle_time_ms_bytes.length
-      + tag_buffer_bytes.length);
+      + tag_buffer_bytes.length
+      + session_id_bytes.length);
 
 
     console.log('Message Length:', msg_length);
@@ -85,6 +89,7 @@ const server = net.createServer((conn) => {
     conn.write(fetch_api_key_max_version_bytes);
     conn.write(fetch_tag_buffer_bytes);
     conn.write(throttle_time_ms_bytes);
+    conn.write(session_id_bytes)
     conn.write(tag_buffer_bytes);
 
   });
