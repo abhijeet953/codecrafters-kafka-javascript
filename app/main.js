@@ -30,12 +30,12 @@ const server = net.createServer((conn) => {
         res.writeUInt32BE(correlationId, 4);
         res.writeUInt16BE(0, 8); // Error code
         res.writeUInt8(8, 10); // Length of the following fields + 1
-        res.writeUInt16BE(apiKey, 11);
-        res.writeUInt16BE(4, 13); // Min version
-        res.writeUInt16BE(4, 15); // Max version
-        res.writeUInt8(0, 17); // _tagged_fields[0] length
-        res.writeUInt32BE(0, 18); // Throttle time
-        res.writeUInt8(0, 22); // _tagged_fields length
+        // res.writeUInt16BE(apiKey, 11);
+        // res.writeUInt16BE(4, 13); // Min version
+        // res.writeUInt16BE(4, 15); // Max version
+        // res.writeUInt8(0, 17); // _tagged_fields[0] length
+        // res.writeUInt32BE(0, 18); // Throttle time
+        // res.writeUInt8(0, 22); // _tagged_fields length
         console.log(res);
         conn.write(res);
       }
