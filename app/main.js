@@ -32,11 +32,11 @@ const server = net.createServer((connection) => {
     let response;
 
     if (requestApiKey === 18 && requestApiVersion >= 0 && requestApiVersion <= 4) {
-      // Create response buffer
-      response = Buffer.alloc(35); // Adjust size based on protocol requirements
+      // Create response buffer with size including the length prefix
+      response = Buffer.alloc(16); // Ensure this size is correct for your protocol
 
       // Write message length (4 bytes)
-      response.writeUInt32BE(31, 0); // Length of the response body
+      response.writeUInt32BE(12, 0); // Length of the response body (excluding the length prefix)
 
       // Write correlation ID (4 bytes) - Placeholder
       response.writeUInt32BE(0, 4); // Placeholder for correlation ID
@@ -44,7 +44,7 @@ const server = net.createServer((connection) => {
       // Write error code (1 byte)
       response.writeUInt8(0, 8);
 
-      // Write length (1 byte) - assuming this is the length of the following data
+      // Write length (1 byte) - Assuming this is the length of the following data
       response.writeUInt8(8, 9);
 
       // Write API key (2 bytes)
@@ -55,13 +55,9 @@ const server = net.createServer((connection) => {
 
       // Write max version (2 bytes)
       response.writeUInt16BE(4, 14);
-
-      // Write additional fields as needed (e.g., tagged fields)
-      // Adjust these fields according to your protocol
-      response.writeUInt8(0, 16); // Placeholder for additional data (if required)
       
     } else {
-      // Handle other cases or errors
+      // Handle unsupported API Key or version
       response = Buffer.alloc(8);
 
       // Write message length (4 bytes)
